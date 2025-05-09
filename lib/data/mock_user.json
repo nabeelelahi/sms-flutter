@@ -1,0 +1,51 @@
+{
+    "teachers": [
+      {
+        "name": "Dawoud Rabih",
+        "role": "Teacher",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      {
+        "name": "William",
+        "role": "Teacher",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/men/33.jpg"
+      }
+    ],
+    "students": [
+      {
+        "name": "Jon",
+        "role": "Student",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/boys/10.jpg"
+      },
+      {
+        "name": "Charley",
+        "role": "Student",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/boys/11.jpg"
+      }
+    ],
+    "admins": [
+      {
+        "name": "Jon",
+        "role": "Student",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/boys/12.jpg"
+      },
+      {
+        "name": "Charley",
+        "role": "Student",
+        "id": "#75848759",
+        "location": "Dubai,UAE",
+        "image": "https://randomuser.me/api/portraits/boys/13.jpg"
+      }
+    ]
+  }
+  
