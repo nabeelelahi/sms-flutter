@@ -28,7 +28,7 @@ class UserDetailsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            CircleAvatar(radius: 50, backgroundImage: NetworkImage(user.image)),
+            // CircleAvatar(radius: 50, backgroundImage: NetworkImage(user.image)),
             const SizedBox(height: 20),
             Text(
               user.name,
@@ -51,8 +51,8 @@ class UserDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            buildInfoRow("User ID", user.id),
-            buildInfoRow("Location", user.location),
+            buildInfoRow("User ID", user.id.toString()),
+            // buildInfoRow("Location", user.location),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -80,7 +80,7 @@ class UserDetailsScreen extends StatelessWidget {
     );
   }
 
-   Widget buildInfoRow(String title, String value) {
+  Widget buildInfoRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(

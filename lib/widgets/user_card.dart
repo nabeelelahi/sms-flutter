@@ -36,7 +36,7 @@ class UserCard extends StatelessWidget {
         ),
         child: Column(
           children: [
-            CircleAvatar(radius: 30, backgroundImage: NetworkImage(user.image)),
+            // CircleAvatar(radius: 30, backgroundImage: NetworkImage(user.image)),
             const SizedBox(height: 15),
             Text(
               user.name,
@@ -57,11 +57,14 @@ class UserCard extends StatelessWidget {
                 style: const TextStyle(color: Colors.black),
               ),
             ),
-            Text("ID: " + user.id, style: const TextStyle(color: Colors.white)),
             Text(
-              "Location: " + user.location,
+              "ID: " + user.id.toString(),
               style: const TextStyle(color: Colors.white),
             ),
+            // Text(
+            //   "Location: " + user.location,
+            //   style: const TextStyle(color: Colors.white),
+            // ),
           ],
         ),
       ),
@@ -69,43 +72,39 @@ class UserCard extends StatelessWidget {
   }
 }
 
-
-  Widget buildSection(String title, List<User> userList, Color bgColor) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const Text("See All", style: TextStyle(color: Colors.grey)),
-            ],
-          ),
-        ),
-        Expanded(
-          // height: , // Increase height to accommodate two rows if needed
-          child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: userList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2 cards in one row
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.8, // Adjust this for card height
+Widget buildSection(String title, List<User> userList, Color bgColor) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            itemBuilder: (context, index) {
-              return UserCard(user: userList[index], backgroundColor: bgColor);
-            },
-          ),
+            const Text("See All", style: TextStyle(color: Colors.grey)),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+      Expanded(
+        // height: , // Increase height to accommodate two rows if needed
+        child: GridView.builder(
+          shrinkWrap: true,
+          itemCount: userList.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2 cards in one row
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.8, // Adjust this for card height
+          ),
+          itemBuilder: (context, index) {
+            return UserCard(user: userList[index], backgroundColor: bgColor);
+          },
+        ),
+      ),
+    ],
+  );
+}

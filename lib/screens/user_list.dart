@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sms/services/request_singleton.dart';
 import 'package:sms/theme/color.dart';
 import '../models/user.dart';
 import '../widgets/user_card.dart';
 import 'package:flutter/services.dart';
 
 class UserListScreen extends StatefulWidget {
-  const UserListScreen({super.key});
+  final String role;
+  const UserListScreen({Key? key, required this.role}) : super(key: key);
 
   @override
   State<UserListScreen> createState() => _UserListScreenState();
@@ -15,108 +17,17 @@ class _UserListScreenState extends State<UserListScreen> {
   List<User> users = [];
 
   Future<void> loadUsers() async {
-    final List<Map<String, dynamic>> teachers = [
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-      {
-        "name": "Dawoud Rabih",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV4UlS1Ehv87B7_HRdQWlKz8Jw13A0zxuiuQ&s",
-      },
-      {
-        "name": "William",
-        "role": "Teacher",
-        "id": "#75848759",
-        "location": "Dubai,UAE",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_B8cYF8ZVSmK8ey4GWZx3BSiDAEUDqR8kiLJjQsXjUV2865K8WVq5PYNSHoMpVWlTetU&usqp=CAU",
-      },
-    ];
-
-    setState(() {
-      users = List<User>.from(teachers.map((x) => User.fromJson(x)));
-    });
+    RequestSingleton<List<dynamic>>('/user/${widget.role}/role', 'GET')
+        .onSuccess((data, headers) {
+          print('Success : $data');
+          setState(() {
+            users = List<User>.from(data.map((x) => User.fromJson(x)));
+          });
+        })
+        .onFailure((error) {
+          print('failed: $error');
+        })
+        .call();
   }
 
   @override
@@ -125,13 +36,18 @@ class _UserListScreenState extends State<UserListScreen> {
     loadUsers();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text('Students List'),
+        title: Text(
+          widget.role == 'student'
+              ? 'Students List'
+              : widget.role == 'teacher'
+              ? 'Teachers List'
+              : 'School Admins',
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

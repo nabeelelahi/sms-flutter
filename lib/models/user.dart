@@ -1,25 +1,31 @@
 class User {
-  final String name;
-  final String role;
-  final String id;
-  final String location;
-  final String image;
-
   User({
-    required this.name,
-    required this.role,
     required this.id,
-    required this.location,
-    required this.image,
+    required this.name,
+    required this.email,
+    required this.emailVerifiedAt,
+    required this.role,
+    required this.createdAt,
+    required this.updatedAt,
   });
+
+  final int id;
+  final String name;
+  final String email;
+  final DateTime? emailVerifiedAt;
+  final String role;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      role: json['role'],
-      id: json['id'],
-      location: json['location'],
-      image: json['image'],
+      id: json["id"],
+      name: json["name"],
+      email: json["email"],
+      emailVerifiedAt: DateTime.tryParse(json["email_verified_at"] ?? ""),
+      role: json["role"],
+      createdAt: DateTime.tryParse(json["created_at"] ?? ""),
+      updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
     );
   }
 }
