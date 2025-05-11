@@ -1,16 +1,30 @@
-# sms
+# School Management App – Flutter Frontend
 
-A new Flutter project.
+This Flutter application is a mobile client for the School Management System built with Laravel (PHP) as backend.
 
-## Getting Started
+## 📱 Features
 
-This project is a starting point for a Flutter application.
+- User Authentication (Login, Registration, Logout)
+- Role-based Access:
+  - Admins can manage all students and user roles
+  - Teachers can view all students
+  - Students can view and edit their own profile
+- Clean and responsive UI
+- Token-based authentication using Laravel Sanctum
+- Error handling and API response management
 
-A few resources to get you started if this is your first Flutter project:
+## 🔧 Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter (Dart)
+- Provider
+- HTTP for API requests
+- Token-based Authentication (Sanctum)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Getting Started
+
+1. Clone the repository
+2. Run `flutter pub get`
+3. Set up API base URL in `lib/config/app_config.dart`
+4. Run the app using:
+   ```bash
+   flutter run
