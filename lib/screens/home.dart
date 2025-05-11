@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sms/providers/auth_provider.dart';
 import 'package:sms/screens/user_list.dart';
 import 'package:sms/theme/color.dart';
+import 'package:sms/widgets/logout_button.dart';
 
 void main() {
   runApp(const SchoolManagementApp());
@@ -25,8 +26,11 @@ class HomeScreen extends StatelessWidget {
     final user = Provider.of<AuthProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
-        title: Text(user!['name']),
-        // backgroundColor: Colors.orange[300],
+        title: Text('Welcome ' + user!.name),
+        automaticallyImplyLeading: false,
+        actions: [
+          LogoutButton()
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -36,25 +40,29 @@ class HomeScreen extends StatelessWidget {
             Card(
               color: AppColors.orange,
               child: Container(
-                width: double.infinity, // Forces full width
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // optional
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Welcome to the School\nManagement System',
                       style: TextStyle(
+                        height: 0,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.white,
+                        letterSpacing: 1,
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    // SizedBox(height: 13),
-                    Text(
-                      'Manage your school admins,teachers,\nand students.',
-                      style: TextStyle(fontSize: 14, color: AppColors.white),
-                      textAlign: TextAlign.start,
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Manage your school admins,\nteachers, and students.',
+                        style: TextStyle(fontSize: 14, color: AppColors.white),
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ],
                 ),
@@ -84,26 +92,35 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          'Click here to manage',
-                          style: TextStyle(color: Colors.white, fontSize: 22),
+                          'Click here\nto manage',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                           textAlign: TextAlign.center,
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 5),
                         ),
-                        const Badge(
-                          backgroundColor: AppColors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.white,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          label: Text(
-                            'Teachers',
-                            style: TextStyle(
-                              backgroundColor: AppColors.white,
-                              color: AppColors.tintedBlack,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
+                          child: Badge(
+                            backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            label: Text(
+                              'TEACHERS',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -134,26 +151,39 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          'Click here to manage',
-                          style: TextStyle(color: Colors.white, fontSize: 22),
+                          'Click here\nto manage',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            // height: 0,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 5),
                         ),
-                        const Badge(
-                          backgroundColor: AppColors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.white,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          label: Text(
-                            'School Admins',
-                            style: TextStyle(
-                              backgroundColor: AppColors.white,
-                              color: AppColors.tintedBlack,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
+                          child: Badge(
+                            backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 5,
+                            ),
+                            label: Text(
+                              'ADMINS',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 14,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -185,20 +215,32 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   const Text(
                     'Click here to manage',
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      height: 0,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   Container(margin: const EdgeInsets.symmetric(vertical: 5)),
-                  const Badge(
-                    backgroundColor: AppColors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    label: Text(
-                      'Students',
-                      style: TextStyle(
-                        backgroundColor: AppColors.white,
-                        color: AppColors.tintedBlack,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.white, width: 2.0),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Badge(
+                      backgroundColor: Colors.transparent,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 5,
+                      ),
+                      label: Text(
+                        'STUDENTS',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

@@ -9,12 +9,12 @@ class RequestSingleton<T> {
   final _baseUrl = Uri.parse(AppConfig.baseUrl); // Replace with your base URL
   static const Duration _timeout = Duration(seconds: 10);
 
-  String? _endpoint;
-  String? _method;
+  final String? _endpoint;
+  final String? _method;
   bool _withAuth = true;
   bool _withToast = true;
-  Map<String, String> _headers = {};
-  Map<String, dynamic> _params = {};
+  final Map<String, String> _headers = {};
+  final Map<String, dynamic> _params = {};
   dynamic _body;
   Function(T data, Map<String, String> headers)? _onSuccess;
   Function(dynamic error)? _onFailure;
@@ -83,13 +83,25 @@ class RequestSingleton<T> {
               .post(uri, headers: _headers, body: json.encode(_body))
               .timeout(_timeout);
           break;
+        case 'PUT':
+          _headers['Content-Type'] = 'application/json';
+          response = await http
+              .put(uri, headers: _headers, body: json.encode(_body))
+              .timeout(_timeout);
+          break;
+        case 'DELETE':
+          _headers['Content-Type'] = 'application/json';
+          response = await http
+              .delete(uri, headers: _headers, body: json.encode(_body))
+              .timeout(_timeout);
+          break;
         case 'GET':
           response = await http.get(uri, headers: _headers).timeout(_timeout);
           break;
         default:
           throw UnsupportedError('Unsupported HTTP method $_method');
       }
-
+      print(response.statusCode);
       final data = json.decode(response.body);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {

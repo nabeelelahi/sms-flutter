@@ -5,18 +5,17 @@ import '../widgets/user_option_bottom_sheet.dart';
 
 class UserCard extends StatelessWidget {
   final User user;
-  final Color backgroundColor;
 
   const UserCard({
     super.key,
     required this.user,
-    required this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    print(user.residence);
     return GestureDetector(
-      onLongPress: () {
+      onTap: () {
         // Replace this with your bottom sheet logic
         showModalBottomSheet(
           context: context,
@@ -31,7 +30,11 @@ class UserCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: 
+          user.role == 'school-admin' ? AppColors.yellow
+          : user.role == 'teacher' ? AppColors.green
+          : AppColors.orange
+          ,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -43,68 +46,36 @@ class UserCard extends StatelessWidget {
               style: const TextStyle(
                 color: AppColors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 22
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                user.role,
-                style: const TextStyle(color: Colors.black),
+                user.role.toUpperCase(),
+                style: const TextStyle(color: AppColors.tintedBlack, fontWeight: FontWeight.bold),
               ),
             ),
             Text(
-              "ID: " + user.id.toString(),
-              style: const TextStyle(color: Colors.white),
+              "ID: #" + user.id.toString(),
+              style: const TextStyle(color: AppColors.white, fontSize: 17),
             ),
-            // Text(
-            //   "Location: " + user.location,
-            //   style: const TextStyle(color: Colors.white),
-            // ),
+            Text(
+              "Age: " + user.age.toString(),
+              style: const TextStyle(color: AppColors.white, fontSize: 17),
+            ),
+            Text(
+              "Location: " + user.residence,
+              style: const TextStyle(color: AppColors.white, fontSize: 17),
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-Widget buildSection(String title, List<User> userList, Color bgColor) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const Text("See All", style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      ),
-      Expanded(
-        // height: , // Increase height to accommodate two rows if needed
-        child: GridView.builder(
-          shrinkWrap: true,
-          itemCount: userList.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 cards in one row
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.8, // Adjust this for card height
-          ),
-          itemBuilder: (context, index) {
-            return UserCard(user: userList[index], backgroundColor: bgColor);
-          },
-        ),
-      ),
-    ],
-  );
 }

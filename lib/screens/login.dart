@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sms/screens/home.dart';
 import 'package:sms/providers/auth_provider.dart';
 import '../theme/color.dart';
-// import 'package:flutter/gestures.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,19 +16,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  void _submitForm() {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  void _submitForm(authProvider) {
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
-      AuthProvider.login(email, password, authProvider);
-      // _emailController.clear();
-      // _passwordController.clear();
+      authProvider.login(email, password);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.tintedBg, // Light yellow
       body: SafeArea(
@@ -56,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text("Email address", style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 8),
                 TextFormField(
+                  enabled: !authProvider.isLoading,
                   controller: _emailController,
                   decoration: InputDecoration(
                     hintText: "Jamessup",
@@ -67,8 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'Email is required';
+                    }
                     if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                       return 'Enter a valid email';
                     }
@@ -82,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text("Password", style: TextStyle(fontSize: 14)),
                 const SizedBox(height: 8),
                 TextFormField(
+                  enabled: !authProvider.isLoading,
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
@@ -106,10 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return 'Password is required';
-                    if (value.length < 6)
+                    }
+                    if (value.length < 6) {
                       return 'Password must be at least 6 characters';
+                    }
                     return null;
                   },
                 ),
@@ -120,27 +121,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    // onPressed: () {
-                    //   Navigator.pushReplacement(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => const HomeScreen(),
-                    //     ),
-                    //   );
-                    // },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.tintedBlack,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
+                  child:
+                      authProvider.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                            onPressed: () => _submitForm(authProvider),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.tintedBlack,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(color: AppColors.white),
+                            ),
+                          ),
                 ),
               ],
             ),

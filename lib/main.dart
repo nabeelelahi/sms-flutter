@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:sms/providers/user_provider.dart';
 import 'package:toastification/toastification.dart';
 import 'screens/splash.dart';
 import 'package:provider/provider.dart';
-import 'providers/auth_provider.dart'; // your provider file
-import 'config/app_globals.dart'; // wherever you put the key
+import 'providers/auth_provider.dart';
+import 'config/app_globals.dart';
 
 void main() {
-  // runApp(const MyApp());
-  runApp(ChangeNotifierProvider(create: (_) => AuthProvider(), child: MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sms/services/request_singleton.dart';
-import 'package:sms/theme/color.dart';
-import '../models/user.dart';
+import 'package:provider/provider.dart';
+import 'package:sms/providers/auth_provider.dart';
+import 'package:sms/screens/register.dart';
+import 'package:sms/widgets/logout_button.dart';
+import '../theme/color.dart';
 import '../widgets/user_card.dart';
-import 'package:flutter/services.dart';
+import '../providers/user_provider.dart';
 
 class UserListScreen extends StatefulWidget {
   final String role;
@@ -14,30 +16,23 @@ class UserListScreen extends StatefulWidget {
 }
 
 class _UserListScreenState extends State<UserListScreen> {
-  List<User> users = [];
-
-  Future<void> loadUsers() async {
-    RequestSingleton<List<dynamic>>('/user/${widget.role}/role', 'GET')
-        .onSuccess((data, headers) {
-          print('Success : $data');
-          setState(() {
-            users = List<User>.from(data.map((x) => User.fromJson(x)));
-          });
-        })
-        .onFailure((error) {
-          print('failed: $error');
-        })
-        .call();
-  }
-
   @override
   void initState() {
     super.initState();
-    loadUsers();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      if (userProvider.getUsers(widget.role).isEmpty) {
+        userProvider.fetchUsersByRole(widget.role);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final currentUser = Provider.of<AuthProvider>(context).user;
+    final users = userProvider.getUsers(widget.role);
+    final loading = userProvider.isLoading(widget.role);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -49,39 +44,45 @@ class _UserListScreenState extends State<UserListScreen> {
               : 'School Admins',
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        automaticallyImplyLeading: currentUser!.role != 'teacher',
+        actions:
+            currentUser.role == 'teacher'
+                ? [
+                  LogoutButton()
+                ]
+                : [],
       ),
       body:
-      // users['teachers']!.isEmpty
-      // ? const Center(child: CircularProgressIndicator())
-      // :
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Expanded(
-          child: GridView.builder(
-            shrinkWrap: true,
-            itemCount: users.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.8,
-            ),
-            itemBuilder: (context, index) {
-              return UserCard(
-                user: users[index],
-                backgroundColor: AppColors.accent,
-              );
-            },
-          ),
-        ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.tintedBlack,
-        child: const Icon(Icons.add, color: AppColors.white),
-      ),
+          loading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: GridView.builder(
+                  itemCount: users.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemBuilder: (context, index) {
+                    return UserCard(user: users[index]);
+                  },
+                ),
+              ),
+      floatingActionButton:
+          widget.role == 'student' && currentUser.role == 'school-admin'
+              ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  );
+                },
+                backgroundColor: AppColors.tintedBlack,
+                child: const Icon(Icons.add, color: AppColors.white),
+              )
+              : null,
     );
   }
 }
