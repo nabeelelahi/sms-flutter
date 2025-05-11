@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sms/providers/auth_provider.dart';
+import 'package:sms/screens/update_user.dart';
+import 'package:sms/widgets/logout_button.dart';
 
-import '../models/user.dart'; // Replace with your actual model import
-import '../theme/color.dart'; // Replace with your app colors
+import '../models/user.dart';
+import '../theme/color.dart';
 
 class UserDetailsScreen extends StatelessWidget {
   final User user;
@@ -10,6 +14,7 @@ class UserDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = Provider.of<AuthProvider>(context).user;
     return Scaffold(
       backgroundColor: AppColors.tintedBg,
       appBar: AppBar(
@@ -23,6 +28,8 @@ class UserDetailsScreen extends StatelessWidget {
           ),
         ),
         iconTheme: const IconThemeData(color: AppColors.tintedBlack),
+        automaticallyImplyLeading: currentUser!.role != 'student',
+        actions: currentUser.role == 'student' ? [LogoutButton()] : [],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -33,7 +40,7 @@ class UserDetailsScreen extends StatelessWidget {
             Text(
               user.name,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: AppColors.tintedBlack,
               ),
@@ -42,37 +49,83 @@ class UserDetailsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.tintedBlack, // Border color
+                  width: 1.0, // Border width
+                ),
                 color: AppColors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                user.role,
-                style: const TextStyle(color: Colors.black),
+                user.role.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 20),
             buildInfoRow("User ID", user.id.toString()),
-            // buildInfoRow("Location", user.location),
+            buildInfoRow("Email", user.email),
+            buildInfoRow("Age", user.age.toString()),
+            buildInfoRow("Location", user.residence),
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.tintedBlack,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Go Back',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
+              child:
+                  currentUser.role == 'school-admin' ||
+                          (currentUser.role == 'student' &&
+                              currentUser.id == user.id)
+                      ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.tintedBlack,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => UpdateUserScreen(user: user),
+                              ),
+                            ),
+                        child: const Text(
+                          'Update',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      )
+                      : null,
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child:
+                  currentUser.role != 'student'
+                      ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.tintedBlack,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Go Back',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      )
+                      : null,
             ),
           ],
         ),
@@ -89,10 +142,17 @@ class UserDetailsScreen extends StatelessWidget {
             "$title: ",
             style: const TextStyle(
               fontWeight: FontWeight.w600,
+              fontSize: 17,
               color: AppColors.tintedBlack,
             ),
           ),
-          Text(value, style: const TextStyle(color: AppColors.accent)),
+          Text(
+            value,
+            style: const TextStyle(
+              color: AppColors.tintedBlack,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
